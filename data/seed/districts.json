@@ -1,0 +1,67 @@
+[
+  {
+    "name": "Mbale",
+    "region": "Eastern",
+    "country": "Uganda",
+    "centroid_lat": 1.08,
+    "centroid_lon": 34.18,
+    "slope_index": 0.45,
+    "flood_exposure_index": 0.55,
+    "elevation_mean": 1067,
+    "river_proximity_score": 0.60,
+    "floodplain_score": 0.55,
+    "landslide_baseline_score": 0.40
+  },
+  {
+    "name": "Bududa",
+    "region": "Eastern",
+    "country": "Uganda",
+    "centroid_lat": 1.00,
+    "centroid_lon": 34.33,
+    "slope_index": 0.85,
+    "flood_exposure_index": 0.40,
+    "elevation_mean": 1580,
+    "river_proximity_score": 0.45,
+    "floodplain_score": 0.35,
+    "landslide_baseline_score": 0.85
+  },
+  {
+    "name": "Sironko",
+    "region": "Eastern",
+    "country": "Uganda",
+    "centroid_lat": 1.23,
+    "centroid_lon": 34.25,
+    "slope_index": 0.55,
+    "flood_exposure_index": 0.50,
+    "elevation_mean": 1320,
+    "river_proximity_score": 0.50,
+    "floodplain_score": 0.50,
+    "landslide_baseline_score": 0.50
+  },
+  {
+    "name": "Moroto",
+    "region": "Karamoja",
+    "country": "Uganda",
+    "centroid_lat": 2.53,
+    "centroid_lon": 34.67,
+    "slope_index": 0.30,
+    "flood_exposure_index": 0.20,
+    "elevation_mean": 1380,
+    "river_proximity_score": 0.20,
+    "floodplain_score": 0.20,
+    "landslide_baseline_score": 0.15
+  },
+  {
+    "name": "Kotido",
+    "region": "Karamoja",
+    "country": "Uganda",
+    "centroid_lat": 3.00,
+    "centroid_lon": 34.13,
+    "slope_index": 0.20,
+    "flood_exposure_index": 0.15,
+    "elevation_mean": 1220,
+    "river_proximity_score": 0.15,
+    "floodplain_score": 0.15,
+    "landslide_baseline_score": 0.10
+  }
+]

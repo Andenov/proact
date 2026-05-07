@@ -1,0 +1,14 @@
+[
+  {"full_name": "Amelia Nabirye", "phone_number": "+256700100001", "district_name": "Mbale", "preferred_language": "en", "consent_status": true},
+  {"full_name": "James Wafula", "phone_number": "+256700100002", "district_name": "Mbale", "preferred_language": "en", "consent_status": true},
+  {"full_name": "Grace Chelangat", "phone_number": "+256700100003", "district_name": "Bududa", "preferred_language": "en", "consent_status": true},
+  {"full_name": "Peter Masaba", "phone_number": "+256700100004", "district_name": "Bududa", "preferred_language": "en", "consent_status": true},
+  {"full_name": "Sarah Nakafu", "phone_number": "+256700100005", "district_name": "Bududa", "preferred_language": "en", "consent_status": true},
+  {"full_name": "David Siwa", "phone_number": "+256700100006", "district_name": "Sironko", "preferred_language": "en", "consent_status": true},
+  {"full_name": "Rebecca Chebet", "phone_number": "+256700100007", "district_name": "Sironko", "preferred_language": "en", "consent_status": true},
+  {"full_name": "Emmanuel Lokwang", "phone_number": "+256700100008", "district_name": "Moroto", "preferred_language": "en", "consent_status": true},
+  {"full_name": "Lydia Akiru", "phone_number": "+256700100009", "district_name": "Moroto", "preferred_language": "en", "consent_status": true},
+  {"full_name": "Samuel Lomonyang", "phone_number": "+256700100010", "district_name": "Kotido", "preferred_language": "en", "consent_status": true},
+  {"full_name": "Joyce Akol", "phone_number": "+256700100011", "district_name": "Kotido", "preferred_language": "en", "consent_status": true},
+  {"full_name": "Moses Wanambwa", "phone_number": "+256700100012", "district_name": "Mbale", "preferred_language": "en", "consent_status": true}
+]

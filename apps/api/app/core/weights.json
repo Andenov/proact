@@ -1,0 +1,20 @@
+{
+  "flood": {
+    "rain_3d": 0.2611,
+    "rain_7d": 0.4028,
+    "anomaly": 0.0,
+    "floodplain": 0.3361
+  },
+  "landslide": {
+    "rain_3d": 0.0,
+    "soil_moisture": 0.0206,
+    "rain_7d": 0.2671,
+    "slope": 0.3914,
+    "baseline": 0.3209
+  },
+  "food_stress": {
+    "rain_deficit": 0.0,
+    "heat_days": 0.0,
+    "seasonality": 1.0
+  }
+}
