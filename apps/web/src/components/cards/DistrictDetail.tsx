@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { getLatestRisk, getRiskHorizons, RiskHorizon } from "@/lib/api";
+import { getLatestRisk, getRiskHorizons, RiskHorizon, Driver } from "@/lib/api";
 import { alertTypeLabel, levelBadge, levelColor } from "@/lib/utils";
 import RainfallChart from "@/components/charts/RainfallChart";
 
@@ -169,9 +169,9 @@ export default function DistrictDetail({ districtId, districtName, onClose }: Pr
             </div>
           </div>
           <ScoreBar score={r.score} level={r.level} />
-          {score?.top_drivers_json?.[r.type]?.length ? (
+          {(score?.top_drivers_json?.[r.type] as Driver[] | undefined)?.length ? (
             <div className="mt-2 space-y-1">
-              {score.top_drivers_json[r.type].slice(0, 2).map((d) => (
+              {(score!.top_drivers_json![r.type] as Driver[]).slice(0, 2).map((d) => (
                 <div key={d.factor} className="flex items-center justify-between text-xs text-slate-500">
                   <span>{d.factor}</span>
                   <span className="text-slate-400">{d.contribution.toFixed(1)} pts</span>

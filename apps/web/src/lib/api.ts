@@ -115,6 +115,7 @@ export interface TopDriversJson {
   landslide?: Driver[];
   food_stress?: Driver[];
   descriptions?: Record<string, string>;
+  [key: string]: Driver[] | Record<string, string> | undefined;
 }
 
 export interface RiskScore {
