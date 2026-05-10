@@ -1,5 +1,7 @@
 import logging
+import threading
 from contextlib import asynccontextmanager
+from datetime import date
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -14,6 +16,32 @@ logging.basicConfig(level=getattr(logging, settings.LOG_LEVEL, logging.INFO))
 logger = logging.getLogger(__name__)
 
 
+def _startup_catchup():
+    """Run the daily pipeline immediately if weather data is stale."""
+    from app.models.weather import WeatherObservation
+    from app.jobs.tasks import run_daily_pipeline
+
+    db = SessionLocal()
+    try:
+        latest = (
+            db.query(WeatherObservation)
+            .order_by(WeatherObservation.date.desc())
+            .first()
+        )
+        if latest is None or latest.date < date.today():
+            logger.info(
+                "Data stale (latest obs: %s) — running catch-up pipeline in background",
+                latest.date if latest else "none",
+            )
+            threading.Thread(target=run_daily_pipeline, daemon=True).start()
+        else:
+            logger.info("Data current (%s) — no catch-up needed", latest.date)
+    except Exception as exc:
+        logger.warning("Catch-up check failed: %s", exc)
+    finally:
+        db.close()
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     logger.info("Starting PROACT API...")
@@ -23,6 +51,7 @@ async def lifespan(app: FastAPI):
     finally:
         db.close()
     start_scheduler()
+    _startup_catchup()
     yield
     stop_scheduler()
     logger.info("PROACT API shutting down")
