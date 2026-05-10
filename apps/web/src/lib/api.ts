@@ -110,6 +110,13 @@ export interface DistrictWithRisk extends District {
   food_stress_level: string | null;
 }
 
+export interface TopDriversJson {
+  flood?: Driver[];
+  landslide?: Driver[];
+  food_stress?: Driver[];
+  descriptions?: Record<string, string>;
+}
+
 export interface RiskScore {
   id: number;
   district_id: number;
@@ -121,7 +128,7 @@ export interface RiskScore {
   landslide_level: string | null;
   food_stress_score: number | null;
   food_stress_level: string | null;
-  top_drivers_json: Record<string, Driver[]> | null;
+  top_drivers_json: TopDriversJson | null;
   recommendations_json: Record<string, string[]> | null;
   created_at: string;
 }
