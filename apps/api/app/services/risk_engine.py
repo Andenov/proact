@@ -18,6 +18,33 @@ FOOD_STRESS_THRESHOLDS = {"Low": 30, "Medium": 60} # <30 Low, 30-59 Medium, >=60
 
 
 # ---------------------------------------------------------------------------
+# Plain-language level descriptions (what the level means in practice)
+# ---------------------------------------------------------------------------
+_LEVEL_DESCRIPTIONS: Dict[str, Dict[str, str]] = {
+    "flood": {
+        "Low":    "No significant flooding expected. {driver} is within normal range.",
+        "Medium": "Localized flooding of low-lying areas possible in the next 7-14 days, driven primarily by {driver}.",
+        "High":   "Significant flooding likely within 3-7 days. {driver} is at a critical level - activate emergency response now.",
+    },
+    "landslide": {
+        "Low":    "Slopes stable. {driver} within safe limits - standard hillside monitoring is sufficient.",
+        "Medium": "Elevated slope instability due to {driver}. Communities on steep terrain should stay alert and prepare to evacuate if conditions worsen.",
+        "High":   "High probability of slope failure within 3-7 days. {driver} at critical levels - evacuate high-risk zones immediately.",
+    },
+    "food_stress": {
+        "Low":    "Food security within normal range. {driver} is adequate for the current season.",
+        "Medium": "Rainfall below seasonal average. {driver} suggests crop stress likely within 2-4 weeks - early coping measures advised.",
+        "High":   "Severe food stress risk. {driver} at a critical deficit - food insecurity likely within 4-8 weeks without intervention.",
+    },
+}
+
+
+def _build_description(hazard: str, level: str, top_driver_name: str) -> str:
+    template = _LEVEL_DESCRIPTIONS.get(hazard, {}).get(level, "")
+    return template.format(driver=top_driver_name)
+
+
+# ---------------------------------------------------------------------------
 # Recommendation templates
 # ---------------------------------------------------------------------------
 RECOMMENDATIONS: Dict[str, Dict[str, List[str]]] = {
@@ -133,6 +160,7 @@ def compute_flood_score(
     return {
         "score": score,
         "level": level,
+        "description": _build_description("flood", level, drivers[0]["factor"] if drivers else "rainfall"),
         "drivers": drivers,
         "recommendations": RECOMMENDATIONS["flood"][level],
     }
@@ -167,6 +195,7 @@ def compute_landslide_score(
     return {
         "score": score,
         "level": level,
+        "description": _build_description("landslide", level, drivers[0]["factor"] if drivers else "terrain conditions"),
         "drivers": drivers,
         "recommendations": RECOMMENDATIONS["landslide"][level],
     }
@@ -211,6 +240,7 @@ def compute_food_stress_score(
     return {
         "score": score,
         "level": level,
+        "description": _build_description("food_stress", level, drivers[0]["factor"] if drivers else "seasonal conditions"),
         "drivers": drivers,
         "recommendations": RECOMMENDATIONS["food_stress"][level],
     }

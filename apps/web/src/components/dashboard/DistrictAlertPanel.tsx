@@ -115,6 +115,12 @@ export default function DistrictAlertPanel({ district, riskType, onClose }: Prop
                 Score: {riskInfo.scoreVal.toFixed(0)}/100
               </div>
             )}
+            {/* Plain-language description */}
+            {score?.top_drivers_json?.descriptions?.[riskType] && (
+              <div className="mt-2 pt-2 border-t border-white/10 text-xs text-slate-300 leading-relaxed">
+                {score.top_drivers_json.descriptions[riskType]}
+              </div>
+            )}
           </div>
         )}
 
@@ -212,28 +218,35 @@ export default function DistrictAlertPanel({ district, riskType, onClose }: Prop
             </div>
             <div className="space-y-1.5">
               {[
-                { label: "Flood", level: score.flood_level, score: score.flood_score },
-                { label: "Landslide", level: score.landslide_level, score: score.landslide_score },
-                { label: "Food Stress", level: score.food_stress_level, score: score.food_stress_score },
+                { key: "flood",       label: "Flood",       level: score.flood_level,       score: score.flood_score },
+                { key: "landslide",   label: "Landslide",   level: score.landslide_level,   score: score.landslide_score },
+                { key: "food_stress", label: "Food Stress", level: score.food_stress_level, score: score.food_stress_score },
               ].map((r) => (
-                <div key={r.label} className="flex items-center justify-between">
-                  <span className="text-xs text-slate-400">{r.label}</span>
-                  <div className="flex items-center gap-2">
-                    <div className="w-24 bg-white/10 rounded-full h-1.5">
-                      <div
-                        className="h-1.5 rounded-full"
-                        style={{
-                          width: `${r.score ?? 0}%`,
-                          backgroundColor:
-                            r.level === "High" ? "#f87171" :
-                            r.level === "Medium" ? "#fbbf24" : "#34d399",
-                        }}
-                      />
+                <div key={r.label} className="space-y-1">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs text-slate-400">{r.label}</span>
+                    <div className="flex items-center gap-2">
+                      <div className="w-24 bg-white/10 rounded-full h-1.5">
+                        <div
+                          className="h-1.5 rounded-full"
+                          style={{
+                            width: `${r.score ?? 0}%`,
+                            backgroundColor:
+                              r.level === "High" ? "#f87171" :
+                              r.level === "Medium" ? "#fbbf24" : "#34d399",
+                          }}
+                        />
+                      </div>
+                      <span className={`text-xs font-semibold w-12 text-right ${LEVEL_COLOR[r.level ?? "Low"] ?? "text-slate-400"}`}>
+                        {r.level ?? "—"}
+                      </span>
                     </div>
-                    <span className={`text-xs font-semibold w-12 text-right ${LEVEL_COLOR[r.level ?? "Low"] ?? "text-slate-400"}`}>
-                      {r.level ?? "—"}
-                    </span>
                   </div>
+                  {score?.top_drivers_json?.descriptions?.[r.key] && (
+                    <p className="text-xs text-slate-500 leading-relaxed pl-0.5">
+                      {score.top_drivers_json.descriptions[r.key]}
+                    </p>
+                  )}
                 </div>
               ))}
             </div>

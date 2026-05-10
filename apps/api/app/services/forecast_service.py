@@ -100,9 +100,9 @@ def _score_window(
     landslide = compute_landslide_score(stats["rain_3d"], stats["rain_7d"], slope, landslide_baseline, sm)
     food = compute_food_stress_score(stats["rain_deficit_30d"], stats["heat_stress_days"], target_date.month)
     return {
-        "flood":       {"score": flood["score"],      "level": flood["level"]},
-        "landslide":   {"score": landslide["score"],  "level": landslide["level"]},
-        "food_stress": {"score": food["score"],       "level": food["level"]},
+        "flood":       {"score": flood["score"],      "level": flood["level"],      "description": flood["description"]},
+        "landslide":   {"score": landslide["score"],  "level": landslide["level"],  "description": landslide["description"]},
+        "food_stress": {"score": food["score"],       "level": food["level"],       "description": food["description"]},
     }
 
 

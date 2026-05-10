@@ -106,6 +106,7 @@ export interface RiskScore {
 export interface RiskLevelScore {
   score: number;
   level: string;
+  description?: string;
 }
 
 export interface RiskHorizon {

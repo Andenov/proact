@@ -63,7 +63,15 @@ SMS_TEMPLATES: Dict[str, Dict[str, str]] = {
 }
 
 
-def build_sms_message(district_name: str, alert_type: str, severity: str) -> str:
+def build_sms_message(
+    district_name: str,
+    alert_type: str,
+    severity: str,
+    description: str | None = None,
+) -> str:
+    if description:
+        prefix = "PROACT Alert: " if severity in ("Medium", "High") else "PROACT: "
+        return f"{prefix}{severity.upper()} {alert_type.replace('_', ' ')} risk in {district_name}. {description}"
     template = SMS_TEMPLATES.get(alert_type, {}).get(severity)
     if not template:
         return f"PROACT Alert: {severity} {alert_type} risk in {district_name}. Contact local officials."

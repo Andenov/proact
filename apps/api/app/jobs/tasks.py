@@ -181,6 +181,11 @@ def compute_all_risks(db: Session) -> Dict:
             "flood": flood_result["drivers"],
             "landslide": landslide_result["drivers"],
             "food_stress": food_result["drivers"],
+            "descriptions": {
+                "flood": flood_result["description"],
+                "landslide": landslide_result["description"],
+                "food_stress": food_result["description"],
+            },
         }
         recommendations = {
             "flood": flood_result["recommendations"],
