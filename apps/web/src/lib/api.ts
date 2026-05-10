@@ -58,6 +58,29 @@ export const triggerIngest = () =>
 export const triggerComputeRisk = () =>
   apiFetch<unknown>("/ingest/compute-risk", { method: "POST" });
 
+// Storage
+export const getStorageUnits = (params?: { farmer_id?: number; district_id?: number }) => {
+  const q = new URLSearchParams();
+  if (params?.farmer_id) q.set("farmer_id", String(params.farmer_id));
+  if (params?.district_id) q.set("district_id", String(params.district_id));
+  return apiFetch<StorageUnit[]>(`/storage/units${q.toString() ? "?" + q : ""}`);
+};
+export const registerStorageUnit = (data: StorageUnitCreate) =>
+  apiFetch<StorageUnit>("/storage/units", { method: "POST", body: JSON.stringify(data) });
+export const getStorageUnit = (id: number) =>
+  apiFetch<StorageUnit>(`/storage/units/${id}`);
+export const submitSiloReading = (unit_id: number, data: SiloReadingCreate) =>
+  apiFetch<{ reading_id: number; risk: StorageReadingRisk }>(`/storage/units/${unit_id}/readings`, {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+export const getSiloReadings = (unit_id: number) =>
+  apiFetch<SiloReading[]>(`/storage/units/${unit_id}/readings`);
+export const getStorageRisk = (unit_id: number) =>
+  apiFetch<StorageRisk>(`/storage/units/${unit_id}/risk`);
+export const computeStorageRisks = () =>
+  apiFetch<{ computed: number }>("/storage/compute-risk", { method: "POST" });
+
 // Auth
 export const login = (email: string, password: string) =>
   apiFetch<{ access_token: string; user: User }>("/auth/login", {
@@ -190,4 +213,89 @@ export interface User {
   role: string;
   organization: string | null;
   created_at: string;
+}
+
+export interface StorageLatestRisk {
+  score: number;
+  level: string;
+  predicted_days_safe: number;
+  recommendation: string | null;
+}
+
+export interface StorageLatestReading {
+  timestamp: string;
+  moisture_pct: number | null;
+  temp_c: number | null;
+  humidity_pct: number | null;
+  co2_ppm: number | null;
+}
+
+export interface StorageUnit {
+  id: number;
+  farmer_id: number;
+  farmer_name: string | null;
+  district_id: number | null;
+  district_name: string | null;
+  unit_name: string;
+  hermetic_type: string;
+  capacity_kg: number | null;
+  grain_type: string;
+  subscription_tier: string;
+  install_date: string | null;
+  is_active: boolean;
+  created_at: string;
+  latest_risk: StorageLatestRisk | null;
+  latest_reading: StorageLatestReading | null;
+}
+
+export interface StorageUnitCreate {
+  farmer_id: number;
+  district_id?: number;
+  unit_name: string;
+  hermetic_type?: string;
+  capacity_kg?: number;
+  grain_type?: string;
+  subscription_tier?: string;
+  install_date?: string;
+}
+
+export interface SiloReadingCreate {
+  temp_c?: number;
+  moisture_pct?: number;
+  humidity_pct?: number;
+  co2_ppm?: number;
+}
+
+export interface SiloReading {
+  id: number;
+  timestamp: string;
+  temp_c: number | null;
+  moisture_pct: number | null;
+  humidity_pct: number | null;
+  co2_ppm: number | null;
+}
+
+export interface StorageDriver {
+  factor: string;
+  contribution: number;
+  value: number;
+  raw: string;
+}
+
+export interface StorageReadingRisk {
+  score: number;
+  level: string;
+  predicted_days_safe: number;
+  description: string;
+  recommendations: string[];
+}
+
+export interface StorageRisk {
+  unit_id: number;
+  date: string;
+  score: number;
+  level: string;
+  predicted_days_safe: number;
+  top_drivers: StorageDriver[];
+  recommendation: string | null;
 }

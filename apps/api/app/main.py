@@ -10,7 +10,7 @@ from app.core.config import settings
 from app.db.session import SessionLocal
 from app.db.init_db import init_db
 from app.jobs.scheduler import start_scheduler, stop_scheduler
-from app.routes import alerts, auth, districts, farmers, health, ingest, risk, sms
+from app.routes import alerts, auth, districts, farmers, health, ingest, risk, sms, storage
 
 logging.basicConfig(level=getattr(logging, settings.LOG_LEVEL, logging.INFO))
 logger = logging.getLogger(__name__)
@@ -80,3 +80,4 @@ app.include_router(alerts.router)
 app.include_router(farmers.router)
 app.include_router(sms.router)
 app.include_router(ingest.router)
+app.include_router(storage.router)
