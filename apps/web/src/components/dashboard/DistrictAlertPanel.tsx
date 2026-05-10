@@ -29,13 +29,6 @@ const LEVEL_BG: Record<string, string> = {
   Low: "bg-emerald-500/20 border-emerald-500/30",
 };
 
-function getRiskLevel(score: ReturnType<typeof useQuery<ReturnType<typeof getLatestRisk> extends Promise<infer T> ? T : never>["data"]>, type: RiskType) {
-  if (!score || !Array.isArray(score) || !score[0]) return null;
-  const s = score[0];
-  if (type === "flood") return { level: s.flood_level, score: s.flood_score };
-  if (type === "landslide") return { level: s.landslide_level, score: s.landslide_score };
-  return { level: s.food_stress_level, score: s.food_stress_score };
-}
 
 export default function DistrictAlertPanel({ district, riskType, onClose }: Props) {
   const { data: scores = [], isLoading } = useQuery({
