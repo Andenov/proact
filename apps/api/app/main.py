@@ -17,27 +17,49 @@ logger = logging.getLogger(__name__)
 
 
 def _startup_catchup():
-    """Run the daily pipeline immediately if weather data is stale."""
+    """Run the daily pipeline and backfill history if data is stale or missing."""
     from app.models.weather import WeatherObservation
-    from app.jobs.tasks import run_daily_pipeline
+    from app.models.risk_score import DistrictRiskScore
+    from app.jobs.tasks import run_daily_pipeline, backfill_risk_scores
 
     db = SessionLocal()
     try:
-        latest = (
+        latest_obs = (
             db.query(WeatherObservation)
             .order_by(WeatherObservation.date.desc())
             .first()
         )
-        if latest is None or latest.date < date.today():
+        risk_count = db.query(DistrictRiskScore).count()
+
+        if latest_obs is None or latest_obs.date < date.today():
             logger.info(
                 "Data stale (latest obs: %s) — running catch-up pipeline in background",
-                latest.date if latest else "none",
+                latest_obs.date if latest_obs else "none",
             )
             threading.Thread(target=run_daily_pipeline, daemon=True).start()
         else:
-            logger.info("Data current (%s) — no catch-up needed", latest.date)
+            logger.info("Data current (%s) — no catch-up needed", latest_obs.date)
+
+        # Backfill historical scores for charts if fewer than 25 rows exist
+        if risk_count < 25:
+            logger.info("Risk score history sparse (%d rows) — backfilling 30 days", risk_count)
+            threading.Thread(
+                target=lambda: _run_backfill(), daemon=True
+            ).start()
     except Exception as exc:
         logger.warning("Catch-up check failed: %s", exc)
+    finally:
+        db.close()
+
+
+def _run_backfill():
+    from app.jobs.tasks import backfill_risk_scores
+    db = SessionLocal()
+    try:
+        backfill_risk_scores(db, days_back=30)
+        logger.info("Historical risk score backfill complete")
+    except Exception as exc:
+        logger.error("Backfill failed: %s", exc)
     finally:
         db.close()
 
