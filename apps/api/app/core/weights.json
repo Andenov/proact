@@ -13,8 +13,7 @@
     "baseline": 0.3209
   },
   "food_stress": {
-    "rain_deficit": 0.0,
-    "heat_days": 0.0,
-    "seasonality": 1.0
+    "rain_deficit": 0.65,
+    "heat_days": 0.35
   }
 }

@@ -228,13 +228,14 @@ def compute_food_stress_score(
     seasonality = UGANDA_SEASONALITY.get(current_month, 0.8)
 
     w = get_food_stress_weights()
+    # Seasonality is NOT a factor here — it's a multiplier applied after scoring.
+    # The base score reflects actual measured stress; season then amplifies or dampens it
+    # (the same rainfall deficit is more dangerous during planting season than off-season).
     factors = [
         ("Rainfall deficit (30d)", deficit_norm, w["rain_deficit"]),
-        ("Heat stress days", heat_norm, w["heat_days"]),
-        ("Seasonal vulnerability", seasonality, w["seasonality"]),
+        ("Heat stress days",       heat_norm,    w["heat_days"]),
     ]
     score, drivers = _compute_weighted_score(factors)
-    # Apply seasonality as a multiplier (amplify in peak season)
     score = min(round(score * seasonality, 1), 100.0)
     level = _score_to_level(score, FOOD_STRESS_THRESHOLDS)
     return {

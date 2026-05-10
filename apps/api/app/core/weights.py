@@ -30,9 +30,9 @@ DEFAULT_WEIGHTS: Dict[str, Dict[str, float]] = {
         "baseline":      0.10,
     },
     "food_stress": {
-        "rain_deficit": 0.50,
-        "heat_days":    0.30,
-        "seasonality":  0.20,
+        "rain_deficit": 0.65,
+        "heat_days":    0.35,
+        # seasonality is applied as a multiplier in the engine, not a weighted factor
     },
 }
 
