@@ -14,12 +14,40 @@ Piloting in Northern and Eastern Uganda: Mbale, Bududa, Sironko, Moroto, Kotido.
 
 ## Running locally
 ```
-docker-compose up --build        # first time
-docker-compose up                # subsequent runs
+docker compose up --build        # first time
+docker compose up                # subsequent runs
 ```
 - Web: http://localhost:3000
 - API docs: http://localhost:8000/docs
 - Default admin: admin@proact.org / proact2024
+
+## Production deployment (Digital Ocean)
+- **Droplet IP:** `64.227.12.224`
+- **Web:** http://64.227.12.224:3000
+- **API docs:** http://64.227.12.224:8000/docs
+- **Repo on droplet:** `/opt/proact`
+- **GitHub:** https://github.com/Andenov/proact
+- SSH: `ssh root@64.227.12.224`
+
+### Start production server
+```bash
+cd /opt/proact
+docker compose up -d
+```
+
+### Known issue (as of 2026-05-14 — unresolved)
+API container fails to connect to DB. The `.env` `DATABASE_URL` defaults to `localhost` but Docker requires the service name `db`.
+Fix:
+```bash
+grep DATABASE_URL .env   # should show @db:5432, not @localhost:5432
+# if still localhost:
+sed -i 's/@localhost:5432/@db:5432/' .env
+docker compose up -d --force-recreate api
+```
+
+### Planned
+- Point a custom domain to `64.227.12.224` (nginx config at `nginx/`)
+- Set up SSL via Let's Encrypt once domain is live
 
 ## Key architecture
 - `apps/api/app/services/risk_engine.py` — scoring logic (flood, landslide, food stress)
@@ -35,8 +63,8 @@ docker-compose up                # subsequent runs
 Weights are calibrated from historical Uganda disaster events in `data/events/historical_events.csv`.
 To re-calibrate:
 ```
-docker-compose run --rm api python scripts/calibrate_weights.py
-docker-compose restart api
+docker compose run --rm api python scripts/calibrate_weights.py
+docker compose restart api
 ```
 
 ## Seed data after fresh start
