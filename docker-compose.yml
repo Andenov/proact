@@ -1,9 +1,8 @@
-version: "3.9"
-
 services:
   db:
     image: postgis/postgis:15-3.3
     container_name: proact_db
+    restart: unless-stopped
     environment:
       POSTGRES_USER: proact
       POSTGRES_PASSWORD: proact
@@ -23,6 +22,7 @@ services:
       context: ./apps/api
       dockerfile: ../../infra/docker/api.Dockerfile
     container_name: proact_api
+    restart: unless-stopped
     env_file: .env
     ports:
       - "8000:8000"
@@ -37,18 +37,13 @@ services:
   web:
     build:
       context: ./apps/web
-      dockerfile: ../../infra/docker/web.Dockerfile
+      dockerfile: ../../infra/docker/web.prod.Dockerfile
     container_name: proact_web
-    environment:
-      NEXT_PUBLIC_API_URL: http://localhost:8000
+    restart: unless-stopped
     ports:
       - "3000:3000"
     depends_on:
       - api
-    volumes:
-      - ./apps/web:/app
-      - /app/node_modules
-      - /app/.next
 
 volumes:
   postgres_data:
